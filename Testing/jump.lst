@@ -1,0 +1,39 @@
+       1                                		.PSECT A, REL
+       2                                ;    ******************************
+       3                                ;    *    Jumps & Subroutines	  *
+       4                                ;    ******************************
+       5                                ; 	 R1 & R2 to pass parameters
+       6                                ;	 R0 to Return Value
+       7                                ;	 R5 to Retun Address
+       8                                         
+       9 000000 000207                  A:		  .WORD		135.
+      10 000002 000403                  B:		  .WORD		259.
+      11                                
+      12                                START:                             ;program starts executing here
+      13 000004 012705  000047          		  MOV		#39.,R5	
+      14 000010 012706  000200          		  MOV		#128.,sp
+      15 000014 016701  177760          		  MOV		A,R1
+      16 000020 016702  177756          		  MOV		B,R2
+      17 000024 010146                  		  MOV		R1,-(sp)	   ;push Arg1 on stack
+      18 000026 010246                  		  MOV		R2,-(sp)	   ;push Arg2 on stack
+      19 000030 004567  000012          		  JSR		R5,Addsb	   ;R5 = Return Address
+      20 000034 000240                  		  NOP
+      21 000036 062706  000004          		  ADD		#4,sp		   ;adjust stack to remove parameters
+      22 000042 000167  000040          		  JMP		end
+      23 000046 010146                  Addsb:	  MOV		R1, -(sp)	   ;push R1 on stack and restore at end of subroutine
+      24 000050 016601  000006          		  MOV		6(SP), R1	   ;Arg1
+      25 000054 066601  000004          		  ADD		4(sp), R1	   ;Arg2
+      26 000060 010100                  		  MOV		R1,R0		   ;R0 is Return Value
+      27 000062 012601                  		  MOV		(sp)+,R1	   ;Restore R1
+      28 000064 000205                  		  RTS		R5
+      29 000066 010146                  Subsb:	  MOV		R1, -(sp)	   ;push R1 on stack and restore at end of subroutine
+      30 000070 016601  000006          		  MOV		6(SP), R1	   ;Arg1
+      31 000074 166601  000004          		  SUB		4(sp), R1	   ;Arg2
+      32 000100 010100                  		  MOV		R1,R0		   ;R0 is Return Value
+      33 000102 012601                  		  MOV		(sp)+,R1	   ;Restore R1
+      34 000104 000205                  		  RTS		R5
+      35 000106 010146                  end:	  MOV		R1,-(sp)	   ;push Arg1 on stack
+      36 000110 010246                  		  MOV		R2,-(sp)	   ;push Arg2 on stack
+      37 000112 004567  177750          		  JSR		R5,Subsb	   ;R5 = Return Address	
+      38 000116 062706  000004          		  ADD		#4,sp		   ;adjust stack to remove parameters
+      38 000122 000000                  		  HALT		  

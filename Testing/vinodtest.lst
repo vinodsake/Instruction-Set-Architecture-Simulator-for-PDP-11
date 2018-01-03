@@ -1,0 +1,43 @@
+       1                                		.PSECT A, REL
+       2                                ;    **********************************************
+       3                                ;    *    Single Operand Instructions - General	  *
+       4                                ;    **********************************************
+       5                                ; 
+       6 000000 000000                  NUM:      .WORD     0.             ;initialise NUM, N, and CONST
+       7 000002 000005                  N:        .WORD     5.             
+       8 000004 000260                  CONST:    .WORD		176.
+       9                                
+      10                                START:                             ;program starts executing here
+      11 000006 012767  000005  177764            MOV       #5.,NUM        ;Move Imm 5 to NUM	
+      12 000014 012706  000310          		  MOV		#200.,sp
+      13 000020 004167  000072          Dec:      JSR		R1,Deccmp	   ;Jump to subroutine Dec_cmp
+      14 000024 003403                  		  BLE       Inc            ;Branch to Inc when NUM = 1
+      15 000026 005367  177746                    DEC       NUM			   ;Decrement NUM 
+      16 000032 000772                  		  BR		Dec			   ;Branch to Dec
+      17 000034 004267  000066          Inc:	  JSR		R2,Inccmp	   ;Jump to subroutine Inc_cmp
+      18 000040 001403                  		  BEQ		Com			   ;Branch to Inc when NUM = N
+      19 000042 005267  177732          		  INC		NUM			   ;Increment NUM
+      20 000046 000772                  		  BR		Inc			   ;Branch to Inc
+      21 000050 016705  177730          Com:	  MOV		CONST,R5	   ;Move CONST to R5
+      22 000054 005105                  		  COM		R5			   ;Complement R5
+      23 000056 016706  177722          Neg:	  MOV		CONST,sp	   ;Move CONST to sp
+      24 000062 005406                  		  NEG		sp			   ;2's complement sp		  
+      25 000064 162706  000001          		  SUB		#1.,sp		   ;sp - #1
+      26 000070 020506                  		  CMP		R5, sp		   ;Compare R5,sp		  
+      27 000072 001401                  		  BEQ		Tst			   ;Branch to Tst when R5=sp
+      28 000074 005005                  Clr:	  CLR		R5			   ;R5=0
+      29 000076 005006                  Tst:	  CLR		sp			   ;sp=0
+      30 000100 016704  177700          		  MOV		CONST,R4	   ;Move CONST to R4
+      31 000104 005704                  		  TST		R4			   ;0-R4
+      32 000106 004067  000024          		  JSR		R0,SAVE        ;Jump to SAVE subroutine
+      33 000112 000167  000034          		  JMP		END			   ;Jump to END
+      34 000116 026727  177656  000001  Deccmp:  CMP		NUM, #1.	   ;Decrement subroutine
+      35 000124 000201                  		  RTS		R1  		   ;Return
+      36 000126 026767  177646  177646  Inccmp:  CMP		NUM, N		   ;Increment subroutine
+      37 000134 000202                  		  RTS		R2			   ;Return
+      38 000136 012703  000100          SAVE:	  MOV		#64.,R3	       ;Store dec 64
+      39 000142 010223                  		  MOV		R2,(R3)+	   ;R2 is stored in [64] in decimal and increment R3
+      40 000144 010523                  		  MOV		R5,(R3)+	   ;R3 is stored in [66] in decimal and increment R3 
+      41 000146 010623                  		  MOV		sp,(R3)+	   ;sp is stored in [68] in decimal and increment R3
+      42 000150 000200                  		  RTS		R0		  
+      42 000152 000000                  END:      HALT                     ;STOP

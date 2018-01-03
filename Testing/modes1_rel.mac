@@ -1,0 +1,60 @@
+		.PSECT A, REL
+;    ******************************
+;    *    All ADDRESSING MODES 	  *
+;    ******************************
+;
+STACK:	  .BLKW		50			   ;Stack Space
+TOS:	  .WORD		120			   ;Top of stack
+A:		  .WORD		0			   ;[122] = 0
+B:		  .WORD		0			   ;[124] = 0
+C:		  .WORD		0			   ;[126] = 0
+D:		  .WORD		0			   ;[130] = 0
+E:		  .WORD		0			   ;[132] = 0
+         
+START:   						   ;program starts executing here
+		  ;ADDRESSING MODES FOR STACK INSTRUCTIONS
+		  ;AUTODECREMENT
+		  MOV		TOS,SP		   ;SP = Top of the stack
+		  MOV		#1,-(SP)	   ;Push #1 on stack [116] = 1
+		  MOV		#2,-(SP)       ;Push #2 on stack [114] = 2
+		  MOV		#3,-(SP)       ;Push #3 on stack [112] = 3
+		  MOV		#4,-(SP)       ;Push #4 on stack [110] = 4
+		  MOV		#5,-(SP)       ;Push #5 on stack [106] = 5
+		  
+		  ;DEFFERED
+		  MOV		(SP),A		   ;[122] = 5
+		  
+		  ;INDEXED
+		  MOV		12(SP),A	   ;[122] = 5
+		  MOV		10(SP),B	   ;[124] = 4
+		  MOV		6(SP),C  	   ;[126] = 3
+		  MOV		4(SP),D		   ;[130] = 2
+		  MOV		2(SP),E		   ;[132] = 1
+		  
+		  ;INDEXED DEFERRED
+		  MOV		A,@12(SP)	   ;[5] = 5
+		  MOV		B,@10(SP)	   ;[4] = 4
+		  MOV		C,@6(SP)  	   ;[3] = 3
+		  MOV		D,@4(SP)	   ;[2] = 2
+		  MOV		E,@2(SP)	   ;[1] = 1
+		  
+		  ;AUTOINCREMENT
+		  MOV		(SP)+,E 	   ;[132] = 5 Pop #5
+		  MOV		(SP)+,D		   ;[130] = 4 Pop #4
+		  MOV		(SP)+,C        ;[126] = 3 Pop #3
+		  MOV		(SP)+,B        ;[124] = 2 Pop #2
+		  MOV		(SP)+,A        ;[122] = 1 Pop #1
+		  
+		  ;AUTOINCREMENT DEFFERED
+		  MOV		#1,-(SP)	   ;Push #1 on stack [116] = 1
+		  MOV		#2,-(SP)       ;Push #2 on stack [114] = 2
+		  MOV		#3,-(SP)       ;Push #3 on stack [112] = 3
+		  MOV		#4,-(SP)       ;Push #4 on stack [110] = 4
+		  MOV		#5,-(SP)       ;Push #5 on stack [106] = 5
+		  MOV		E,@(SP)+ 	   ;[5] = 1
+		  MOV		D,@(SP)+	   ;[4] = 2
+		  MOV		C,@(SP)+       ;[3] = 3
+		  MOV		B,@(SP)+ 	   ;[2] = 4
+          MOV		A,@(SP)+       ;[1] = 5
+		  
+		  HALT
